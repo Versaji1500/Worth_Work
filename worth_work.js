@@ -64,3 +64,91 @@ function writeSettings(obj) {
     fm.writeString(settingsPath, JSON.stringify(obj, null, 2));
 }
 
+
+// Function to ask for hourly or salary wage and act accordingly to return wage value
+async function grabWageType() {
+    const a = new Alert();
+    a.title = "Wage Information";
+
+    // Check if hourly or salary and then use that to grab the correct information
+    a.addAction("Hourly");
+    a.addAction("Salary");
+    a.addCancelAction("Cancel");
+
+    const choice = await a.present();
+
+    // Direct to correct helper function
+    if (choice === 0) {
+        const wage = await grabWageHourly();
+    }
+    else if (choice === 1) {
+        const wage = await grabWageSalary();
+    }
+    else if (choice === -1) {
+        throw new Error("User Cancelled");
+    }
+
+    return wage;
+}
+
+// Helper function if hourly is selected in the option
+async function grabWageHourly() {
+    const wage = await askNumber("Hourly Wage", "0", "0");
+
+    return wage;
+}
+
+// Helper function if salary is chosen
+async function grabWageSalary() {
+    const wage = await askNumber("Bi-Weekly Salary", "0", "0");
+    const hours = await askNumber("Hours Per Week", "0", "0");
+
+    return(wage / (2 * hours));
+}
+
+// ------- Wage Logic ------- //
+async function wageOptionChoice() {
+    let settings = await readSettings();
+
+    // If no settings or issue, create new file and grab info to store
+    if (!settings || !isFiniteNumber(settings.defaultHourlyWage)) {
+        const wage = grabWageType();
+
+        settings = { defaultHourlyWage: wage };
+        writeSettings(settings);
+
+        return { hourlyWage: wage, source: "saved-default" };
+    }
+
+    const saved = settings.defaultHourlyWage;
+
+    // Menu
+    const a = new Alert();
+    a.title = "Hourly Wage";
+    a.message = `Saved default: $${saved.toFixed(2)}/hr\n\nChoose which wage to use:`;
+    a.addAction(`Use saved ($${saved.toFixed(2)}/hr)`);
+    a.addAction("Use different wage (this time only)");
+    a.addAction("Update saved default wage");
+    a.addCancelAction("Cancel");
+    const choice = await a.present();
+
+    if (choice === -1) throw new Error("User Cancelled");
+
+    if (choice === 0) {
+        return { hourlyWage: saved, source: "saved-default" };
+    }
+
+    if (choice === 1) {
+        const wage = grabWageType();
+
+        return { hourlyWage: wage, source: "one-time-override" };
+    }
+
+    const updated = grabWageType();
+    settings.defaultHourlyWage = updated;
+    writeSettings(settings);
+    return { hourlyWage: updated, source: "saved-default-updated" };
+}
+
+
+await main();
