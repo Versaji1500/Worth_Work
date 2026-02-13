@@ -56,13 +56,13 @@ function writeSettings(obj) {
 // ------- Wage Helpers ------- //
 
 async function grabWageHourly() {
-  const wage = await askNumber("Hourly Wage", "e.g. 20", "20");
+  const wage = await askNumber("Hourly Wage", "", "");
   return wage;
 }
 
 async function grabWageSalary() {
-  const biWeeklyPay = await askNumber("Bi-Weekly Pay", "e.g. 2000", "2000");
-  const hoursPerWeek = await askNumber("Hours Per Week", "e.g. 40", "40");
+  const biWeeklyPay = await askNumber("Bi-Weekly Pay", "", "");
+  const hoursPerWeek = await askNumber("Hours Per Week", "", "");
 
   if (hoursPerWeek <= 0) throw new Error("Hours per week must be > 0");
 
@@ -129,7 +129,7 @@ async function wageOptionChoice() {
 }
 
 async function itemValue() {
-  return await askNumber("Item Value", "e.g. 250", "250");
+  return await askNumber("Item Value", "", "");
 }
 
 // ------- Main ------- //
