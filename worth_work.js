@@ -150,5 +150,24 @@ async function wageOptionChoice() {
     return { hourlyWage: updated, source: "saved-default-updated" };
 }
 
+// Function to get the value of the item
+async function itemValue() {
+    const item = await askNumber("Item Value", "Value of Item", "0");
+    return item;
+}
+
+// Calculations using wage
+async function main() {
+    const wageInfo = await wageOptionChoice();
+    const itemVal = await itemValue();
+
+    let perHour = itemVal / wageInfo;
+
+    const out = new Alert();
+    out.title = "Item Cost in Hours";
+    out.message = `This item would take ${perHour.toFixed(2)} hours`;
+
+    await out.present();
+}
 
 await main();
