@@ -15,7 +15,10 @@ This is a simple script that was designed to be used with the Scriptable app on 
 - The code in the worth_work javascript file can be copied and pasted in your own script within the Scriptable app on the iPhone
 
 ## Usage
+- This app is designed to be used within the scriptable app on iphone
 
+- The script can be copy pasted into a new script in the app. It is ready to run after that. 
+- The app will prompy you for information. Just follow the prompt and input information. The app will take care of the rest
 
 ## Tech Stack
 - Javascript
